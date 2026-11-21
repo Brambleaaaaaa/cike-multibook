@@ -69,8 +69,8 @@ APK 本身就是压缩包，内部 MP3、PDF、`pack.bin` 均为已压缩格式�
 | `Cike-Multibook-3.2.15.apk.part03` | 900 MB |
 | `Cike-Multibook-3.2.15.apk.part04` | 900 MB |
 | `Cike-Multibook-3.2.15.apk.part05` | 476 MB |
-| `合并并校验安装包.bat` | Windows 合并与 SHA256 校验脚本 |
-| `下载与安装说明.txt` | 分卷说明与安装步骤 |
+| `merge-and-verify.bat` | Windows 合并与 SHA256 校验脚本 |
+| `DOWNLOAD-README.txt` | 分卷说明与安装步骤 |
 | `Cike-Multibook-3.2.15-source.zip` | 源码包（不含数 GB 媒体资源） |
 
 全部下载到同一目录后，Windows 双击 `合并并校验安装包.bat`；Linux / macOS 执行：
