@@ -14791,7 +14791,7 @@ ${scoreLine}
   }
 
   const LISTEN_KEYPADS = {
-    en: { rows: ["qwertyuiop", "asdfghjkl", "zxcvbn"], extra: [] },
+    en: { rows: ["qwertyuiop", "asdfghjkl", "zxcvbnm"], extra: [] },
     fr: {
       rows: ["azertyuiop", "qsdfghjklm", "wxcvbn"],
       extra: ["é", "è", "ê", "à", "ç", "ô", "î", "û", "ù", "œ", "'", "-"],
