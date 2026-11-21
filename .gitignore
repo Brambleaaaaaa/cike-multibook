@@ -1,0 +1,17 @@
+node_modules/
+android-dist/
+.android-webroot/
+.cache/
+.ai-memory/
+.impeccable/
+.writing/
+__pycache__/
+*.pyc
+*.log
+*.bak
+*.apk
+*.aab
+*.jks
+*.keystore
+.DS_Store
+Thumbs.db

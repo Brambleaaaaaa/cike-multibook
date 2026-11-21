@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="词刻 CIKE：把英语、法语、日语…一句一句刻进你的本地学习手账。"
+    />
+    <meta name="theme-color" content="#F3F0E8" />
+    <title>词刻 CIKE · 语言学习手账</title>
+    <script>
+      try {
+        const saved =
+          localStorage.getItem("cike-cet6-state-v2") ||
+          localStorage.getItem("cike-cet6-state-v1");
+        const theme = saved ? JSON.parse(saved)?.settings?.theme : "";
+        document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="assets/icon-512.png" />
+    <link rel="preload" href="assets/splash-cike-paper.jpg" as="image" />
+    <link rel="stylesheet" href="styles.css?v=20261120b" />
+    <link rel="stylesheet" href="handdrawn.css?v=20261121a" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <div class="splash-screen" id="splashScreen" aria-label="启动页">
+      <div class="splash-paper-layer" aria-hidden="true">
+        <div class="splash-paper-drift">
+          <img
+            class="splash-paper-img"
+            src="assets/splash-cike-paper.jpg"
+            alt=""
+            draggable="false"
+          />
+        </div>
+        <span class="splash-paper-grain"></span>
+      </div>
+      <div class="splash-stationery-layer" id="splashStationery" aria-hidden="true">
+        <span class="stationery-slot st-bookmark" data-depth="7">
+          <svg class="stationery" viewBox="0 0 32 70">
+            <path d="M5 4h22v60l-11-9-11 9z" />
+            <path d="M10 14h12" />
+          </svg>
+        </span>
+        <span class="stationery-slot st-star" data-depth="4">
+          <svg class="stationery" viewBox="0 0 80 80">
+            <path d="m40 8 6 20 20 6-20 6-6 20-6-20-20-6 20-6z" />
+          </svg>
+        </span>
+        <span class="stationery-slot st-clip" data-depth="8">
+          <svg class="stationery" viewBox="0 0 48 88">
+            <path d="M17 22v45a11 11 0 0 0 22 0V16a9 9 0 0 0-18 0v49a5 5 0 0 0 10 0V24" />
+          </svg>
+        </span>
+        <span class="stationery-slot st-star-b" data-depth="5">
+          <svg class="stationery" viewBox="0 0 80 80">
+            <path d="m40 8 6 20 20 6-20 6-6 20-6-20-20-6 20-6z" />
+          </svg>
+        </span>
+        <span class="stationery-slot st-note" data-depth="6">
+          <svg class="stationery" viewBox="0 0 96 96">
+            <path d="M8 10h80v70l-18 10H8z" />
+            <path d="M70 90V72h18M22 30h52M22 46h52M22 62h34" />
+          </svg>
+        </span>
+        <span class="stationery-slot st-sprig" data-depth="3">
+          <svg class="stationery" viewBox="0 0 70 90">
+            <path d="M35 86V26M35 54c-10-4-16-12-17-22M35 44c9-3 15-10 17-20" />
+            <circle cx="18" cy="30" r="3.4" />
+            <circle cx="52" cy="22" r="3.4" />
+            <circle cx="35" cy="20" r="3" />
+          </svg>
+        </span>
+      </div>
+      <canvas class="splash-trail" id="splashTrail" aria-hidden="true"></canvas>
+      <section class="splash-content">
+        <div class="splash-card" id="splashCard">
+          <span class="splash-card-tape" aria-hidden="true"></span>
+          <div class="splash-emblem" aria-hidden="true">
+            <span class="splash-emblem-ring"></span>
+            <svg viewBox="0 0 200 200">
+              <path class="emblem-book" d="M52 76c18-14 40-18 56-8v66c-16-10-38-6-56 8z" />
+              <path class="emblem-book" d="M108 68c16-10 38-6 56 8v66c-18-14-40-18-56-8z" />
+              <path class="emblem-pen" d="m128 106 24-24 10 10-24 24-14 4z" />
+              <path class="emblem-pen" d="m128 106 10 10M152 82l10 10" />
+              <path class="emblem-base" d="M64 162h84" />
+            </svg>
+          </div>
+          <h1 class="splash-title">
+            <span class="splash-title-cn">词刻</span>
+            <span class="splash-writer" aria-hidden="true">
+              <svg viewBox="0 0 90 90">
+                <path d="M12 80 66 26l14 14-54 54-18 4z" />
+                <path d="m58 34 14 14M8 84l18-4-14-14z" />
+              </svg>
+            </span>
+            <span class="splash-title-en">CIKE</span>
+          </h1>
+          <p class="splash-subtitle">把外语，一句一句刻下来</p>
+        </div>
+        <div class="splash-enter-wrap">
+          <button class="splash-enter" id="enterApp" type="button">
+            <span class="splash-enter-track" aria-hidden="true"></span>
+            <span class="splash-thumb" aria-hidden="true"></span>
+            <span class="splash-enter-label">滑动进入</span>
+            <span class="splash-enter-stamp" aria-hidden="true">刻</span>
+          </button>
+        </div>
+        <p class="splash-status" id="splashStatus">正在翻开词书…</p>
+        <div class="splash-hand" aria-hidden="true">
+          <svg viewBox="0 0 40 60">
+            <path d="M15 32V13a4 4 0 0 1 8 0v15M23 28V19a4 4 0 0 1 8 0v9M31 31v-5a4 4 0 0 1 8 0v13c0 10-5 17-15 17H19c-7 0-12-5-14-12l-3-10a4 4 0 0 1 7-3l4 7" />
+          </svg>
+        </div>
+      </section>
+    </div>
+
+    <svg class="svg-sprite" aria-hidden="true">
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="M3.5 10.5 12 3l8.5 7.5v9a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z" />
+        <path d="M9 21v-7h6v7" />
+      </symbol>
+      <symbol id="i-learning" viewBox="0 0 24 24">
+        <path d="M12 6.5C9.5 4.5 6 4 3.5 5v14c2.5-1 6-.5 8.5 1.5 2.5-2 6-2.5 8.5-1.5V5C18 4 14.5 4.5 12 6.5z" />
+        <path d="M12 6.5v14" />
+      </symbol>
+      <symbol id="i-library" viewBox="0 0 24 24">
+        <path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H10v18H5.5A1.5 1.5 0 0 1 4 19.5z" />
+        <path d="M10 3h5.5A1.5 1.5 0 0 1 17 4.5v15a1.5 1.5 0 0 1-1.5 1.5H10" />
+        <path d="m17 6 3-.8 2.2 13.4-4.2 1.2" />
+      </symbol>
+      <symbol id="i-books" viewBox="0 0 24 24">
+        <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5zM10 4h4.5A1.5 1.5 0 0 1 16 5.5v13a1.5 1.5 0 0 1-1.5 1.5H10" />
+        <path d="m16 7 4-1 2 12-4 1M7 8h1M7 12h1" />
+      </symbol>
+      <symbol id="i-user" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21c.8-4.2 3.5-6.3 8-6.3s7.2 2.1 8 6.3" />
+      </symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24">
+        <path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z" />
+        <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z" />
+      </symbol>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 5 5" />
+      </symbol>
+      <symbol id="i-volume" viewBox="0 0 24 24">
+        <path d="M4 9h4l5-4v14l-5-4H4z" />
+        <path d="M16 9.2a4 4 0 0 1 0 5.6M18.5 6.5a8 8 0 0 1 0 11" />
+      </symbol>
+      <symbol id="i-play" viewBox="0 0 24 24">
+        <path d="m8 5 11 7-11 7z" />
+      </symbol>
+      <symbol id="i-back" viewBox="0 0 24 24">
+        <path d="M20 12H5M11 5l-7 7 7 7" />
+      </symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14M14 7l5 5-5 5" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m4 12.5 5 5L20 6.5" />
+      </symbol>
+      <symbol id="i-undo" viewBox="0 0 24 24">
+        <path d="M9 14 4 9l5-5" />
+        <path d="M4 9h10a6 6 0 0 1 0 12h-3" />
+      </symbol>
+      <symbol id="i-eraser" viewBox="0 0 24 24">
+        <path d="m14.5 4.5 5 5a2 2 0 0 1 0 2.8l-7 7H7.5l-3-3a2 2 0 0 1 0-2.8l7.2-7.2a2 2 0 0 1 2.8 0z" />
+        <path d="m9 8 7 7M12 19h9" />
+      </symbol>
+      <symbol id="i-close" viewBox="0 0 24 24">
+        <path d="M5 5l14 14M19 5 5 19" />
+      </symbol>
+      <symbol id="i-download" viewBox="0 0 24 24">
+        <path d="M12 3v12M7 10l5 5 5-5M4 20h16" />
+      </symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24">
+        <path d="M12 16V4M7 9l5-5 5 5M4 20h16" />
+      </symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24">
+        <path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" />
+        <circle cx="12" cy="13" r="3.4" />
+        <path d="M9 19v-1.5h6V19" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3.5 2" />
+      </symbol>
+      <symbol id="i-shuffle" viewBox="0 0 24 24">
+        <path d="M4 6h3c4 0 6 12 10 12h3M17 3l3 3-3 3M17 15l3 3-3 3M4 18h3c1.5 0 2.7-1.7 3.8-4" />
+      </symbol>
+      <symbol id="i-keyboard" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="M7 9h.01M11 9h.01M15 9h.01M18 9h.01M7 13h.01M11 13h.01M15 13h2M7 17h8" />
+      </symbol>
+      <symbol id="i-star" viewBox="0 0 24 24">
+        <path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" />
+      </symbol>
+      <symbol id="i-headphones" viewBox="0 0 24 24">
+        <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
+        <rect x="2.5" y="13" width="4.5" height="7" rx="2" />
+        <rect x="17" y="13" width="4.5" height="7" rx="2" />
+      </symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <path d="M3 10h18M8 3v4M16 3v4" />
+      </symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24">
+        <path d="M4 20h5l10.5-10.5a2.1 2.1 0 0 0-3-3L6 17z" />
+        <path d="M14.5 8.5 19 13M4 20l1.2-4.2" />
+      </symbol>
+      <symbol id="i-errors" viewBox="0 0 24 24">
+        <path d="M5 3.5h14v17H5z" />
+        <path d="M8 8h8M8 12h5M8 16h3" />
+        <path d="m15.5 15.5 4 4M19.5 15.5l-4 4" />
+      </symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24">
+        <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+      </symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24">
+        <path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H9l2 2h8.5A1.5 1.5 0 0 1 21 9.5v9A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5z" />
+        <path d="M3 10h18" />
+      </symbol>
+      <symbol id="i-bookmark" viewBox="0 0 24 24">
+        <path d="M6 3h12v18l-6-4-6 4z" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14M10 11v6M14 11v6" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6" />
+      </symbol>
+      <symbol id="i-more" viewBox="0 0 24 24">
+        <circle cx="5" cy="12" r="1.4" /><circle cx="12" cy="12" r="1.4" /><circle cx="19" cy="12" r="1.4" />
+      </symbol>
+      <symbol id="i-note" viewBox="0 0 24 24">
+        <path d="M5 3.5h14v17H5z" />
+        <path d="M8 8h8M8 12h8M8 16h4" />
+      </symbol>
+      <symbol id="i-lightbulb" viewBox="0 0 24 24">
+        <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" />
+      </symbol>
+      <symbol id="i-speech" viewBox="0 0 24 24">
+        <path d="M4 5h16v11H9l-5 4z" />
+        <path d="M8 9h8M8 12h5" />
+      </symbol>
+      <symbol id="i-lips" viewBox="0 0 24 24">
+        <path d="M3 12c3-4 6-5 9-5s6 1 9 5c-3 4-6 5-9 5s-6-1-9-5z" />
+        <path d="M3 12h18M8 9.5c1.2 1.6 2.5 2.5 4 2.5s2.8-.9 4-2.5" />
+      </symbol>
+      <symbol id="i-trophy" viewBox="0 0 24 24">
+        <path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3" />
+        <path d="M12 14v3M9 20h6M10 17h4" />
+      </symbol>
+      <symbol id="i-crown" viewBox="0 0 24 24">
+        <path d="m3 8 4 3 5-6 5 6 4-3-2 11H5z" />
+        <path d="M5 19h14" />
+      </symbol>
+      <symbol id="i-diamond" viewBox="0 0 24 24">
+        <path d="M6 4h12l4 6-10 10L2 10z" />
+        <path d="M2 10h20M9 4 7 10l5 10 5-10-2-6" />
+      </symbol>
+      <symbol id="i-rocket" viewBox="0 0 24 24">
+        <path d="M12 3c3 2 4.5 5.4 4.5 9L12 16l-4.5-4C7.5 8.4 9 5 12 3z" />
+        <circle cx="12" cy="8.5" r="1.6" />
+        <path d="M7.5 12 5 15l3-.4M16.5 12 19 15l-3-.4M10 18l2 3 2-3" />
+      </symbol>
+      <symbol id="i-flame" viewBox="0 0 24 24">
+        <path d="M12 3c1.4 3 4.6 4.4 4.6 8.3A4.6 4.6 0 0 1 12 16a4.6 4.6 0 0 1-4.6-4.7C7.4 9.4 8 7 9.4 5c.4 1.8 1.2 2.8 2.6 3.4C12.4 6.8 12.5 5 12 3z" />
+        <path d="M9.5 20h5M10 17.5h4" />
+      </symbol>
+      <symbol id="i-target" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="5" />
+        <circle cx="12" cy="12" r="1.4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20 14.5A8 8 0 0 1 9.5 4a8.2 8.2 0 1 0 10.5 10.5z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2" />
+      </symbol>
+      <symbol id="i-tree" viewBox="0 0 24 24">
+        <path d="M12 3 6 10h3l-3 5h4l-2 4h8l-2-4h4l-3-5h3z" />
+        <path d="M12 19v3" />
+      </symbol>
+      <symbol id="i-coffee" viewBox="0 0 24 24">
+        <path d="M5 8h11v6a5 5 0 0 1-10 0z" />
+        <path d="M16 9h2.5a2.5 2.5 0 0 1 0 5H16M4 21h14M8 5c0-1 .8-1.4.8-2.4M12 5c0-1 .8-1.4.8-2.4" />
+      </symbol>
+      <symbol id="i-cake" viewBox="0 0 24 24">
+        <path d="M4 20h16v-7H4z" />
+        <path d="M4 16c2 1.4 4 1.4 6 0s4-1.4 6 0 2 1 4 0M9 13V9M15 13V9M9 6c0-1 .8-1.4.8-2.4M15 6c0-1 .8-1.4.8-2.4" />
+      </symbol>
+      <symbol id="i-snowflake" viewBox="0 0 24 24">
+        <path d="M12 2v20M3.5 7l17 10M20.5 7l-17 10M8 4l4 3 4-3M8 20l4-3 4 3M4 12l3-2-1-3M20 12l-3-2 1-3M4 12l3 2-1 3M20 12l-3 2 1 3" />
+      </symbol>
+      <symbol id="i-medal" viewBox="0 0 24 24">
+        <circle cx="12" cy="15" r="5.5" />
+        <path d="M9 10 7 2h4l1 6 1-6h4l-2 8M12 12.5v5M9.5 15h5" />
+      </symbol>
+      <symbol id="i-chain" viewBox="0 0 24 24">
+        <path d="M10 14a4 4 0 0 1 0-5.7l2.3-2.3a4 4 0 0 1 5.7 5.7L16 13.7" />
+        <path d="M14 10a4 4 0 0 1 0 5.7l-2.3 2.3a4 4 0 0 1-5.7-5.7L8 10.3" />
+      </symbol>
+      <symbol id="i-leaf" viewBox="0 0 24 24">
+        <path d="M20 4C10 4 4 8.5 4 16c0 2.4 1.6 4 4 4 7.5 0 12-6 12-16z" />
+        <path d="M4 20C7 14 11 10 17 7" />
+      </symbol>
+      <symbol id="i-mountain" viewBox="0 0 24 24">
+        <path d="m2 19 7-12 4 6 3-4 6 10z" />
+        <path d="m9 7 2 3.5M14 13l2-2" />
+      </symbol>
+      <symbol id="i-hourglass" viewBox="0 0 24 24">
+        <path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9" />
+      </symbol>
+      <symbol id="i-lamp" viewBox="0 0 24 24">
+        <path d="M8 3h8l3 9H5z" />
+        <path d="M12 12v6M9 21h6M9 18h6" />
+      </symbol>
+      <symbol id="i-scroll" viewBox="0 0 24 24">
+        <path d="M6 4h12v13a3 3 0 0 0 3 3H9a3 3 0 0 1-3-3z" />
+        <path d="M9 8h6M9 12h6M3 7v10a3 3 0 0 0 3 3" />
+      </symbol>
+      <symbol id="i-cat" viewBox="0 0 24 24">
+        <path d="M5 10 4 4l4 2h8l4-2-1 6v4a7 7 0 0 1-14 0z" />
+        <path d="M9 12h.01M15 12h.01M10 16c1.2.8 2.8.8 4 0" />
+      </symbol>
+      <symbol id="i-lantern" viewBox="0 0 24 24">
+        <path d="M8 6h8v10H8z" />
+        <path d="M9 3h6M9 21h6M8 11h8M12 3v3M12 16v2" />
+      </symbol>
+      <symbol id="i-sprout" viewBox="0 0 24 24">
+        <path d="M12 21v-8" />
+        <path d="M12 13C12 8 8.5 5 4 5c0 5 3.5 8 8 8zM12 11c0-4 3-6.5 7-6.5 0 4.5-3 6.5-7 6.5z" />
+      </symbol>
+      <symbol id="i-offline" viewBox="0 0 24 24">
+        <path d="M7 17a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17 9.5a3.5 3.5 0 0 1 .5 6.96" />
+        <path d="M12 13v5M12 21h.01" />
+      </symbol>
+    </svg>
+
+    <div class="app-frame">
+      <header class="app-header">
+        <button class="brand" type="button" data-view="home" aria-label="回到首页">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <path d="M16 8c-3-2.4-7.5-2.8-11-1.8v17c3.5-1 8-.6 11 1.8 3-2.4 7.5-2.8 11-1.8v-17C23.5 5.2 19 5.6 16 8z" />
+              <path d="M16 8v17" />
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <strong>词刻 <span>CIKE</span></strong>
+            <small>语言学习 · 每日记录</small>
+          </span>
+        </button>
+
+        <div class="header-tools">
+          <form class="search-form" id="headerSearch" role="search">
+            <svg aria-hidden="true"><use href="#i-search"></use></svg>
+            <label class="sr-only" for="searchInput">搜索单词或释义</label>
+            <input
+              id="searchInput"
+              name="query"
+              type="search"
+              autocomplete="off"
+              placeholder="搜全库单词 / 整句翻译"
+            />
+            <kbd>/</kbd>
+          </form>
+          <button
+            class="icon-button"
+            id="openSettings"
+            type="button"
+            aria-label="学习设置"
+            title="学习设置"
+          >
+            <svg><use href="#i-settings"></use></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="app-workspace">
+        <aside class="side-panel" id="sidePanel" aria-label="今日概览"></aside>
+        <main id="main" tabindex="-1"></main>
+        <aside class="detail-panel" id="detailPanel" aria-label="学习数据"></aside>
+      </div>
+
+      <nav class="mobile-nav" aria-label="移动端导航">
+        <button type="button" class="mobile-nav-item is-active" data-view="home">
+          <svg><use href="#i-home"></use></svg><span>首页</span>
+        </button>
+        <button type="button" class="mobile-nav-item" data-view="learning">
+          <svg><use href="#i-learning"></use></svg><span>学习</span>
+        </button>
+        <button type="button" class="mobile-nav-item" data-view="library">
+          <svg><use href="#i-library"></use></svg><span>词库</span>
+        </button>
+        <button type="button" class="mobile-nav-item" data-view="books">
+          <svg><use href="#i-books"></use></svg><span>图书</span>
+        </button>
+        <button type="button" class="mobile-nav-item" data-view="profile">
+          <svg><use href="#i-user"></use></svg><span>个人</span>
+        </button>
+      </nav>
+    </div>
+
+    <dialog class="settings-dialog" id="settingsDialog">
+      <form method="dialog" class="settings-sheet" id="settingsForm">
+        <header class="dialog-header">
+          <div>
+            <h2>学习设置</h2>
+            <p>所有记录只保存在当前设备。</p>
+          </div>
+          <button class="icon-button" value="cancel" aria-label="关闭设置">
+            <svg><use href="#i-close"></use></svg>
+          </button>
+        </header>
+
+        <section
+          class="settings-section profile-settings"
+          aria-labelledby="profileSettingsTitle"
+        >
+          <h3 id="profileSettingsTitle">页边资料</h3>
+          <p>头像、头像框、标签和简介只保存在本机；改完点下方“保存设置”才会应用。</p>
+
+          <div class="avatar-editor">
+            <div class="avatar-editor-preview" id="settingsAvatarPreview">
+              <span class="avatar-editor-initial">词</span>
+            </div>
+            <div class="avatar-editor-side">
+              <div class="avatar-editor-actions">
+                <button type="button" class="button button-secondary" id="settingsAvatarPick">
+                  更换头像
+                </button>
+                <button type="button" class="button button-secondary" id="settingsAvatarShoot">
+                  拍照
+                </button>
+              </div>
+              <label class="field">
+                <span>头像框</span>
+                <select id="settingsAvatarFrame">
+                  <option value="tape">纸胶带</option>
+                  <option value="ink">墨线双框</option>
+                  <option value="film">胶片齿孔</option>
+                  <option value="none">无框</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <input id="settingsAvatarFile" type="file" accept="image/*" hidden />
+          <input
+            id="settingsAvatarCapture"
+            type="file"
+            accept="image/*"
+            capture="user"
+            hidden
+          />
+
+          <div class="settings-grid" style="margin-top:14px">
+            <label class="field">
+              <span>名字</span>
+              <input id="profileNameInput" type="text" maxlength="24" />
+            </label>
+            <label class="field">
+              <span>个人标签 <small>用逗号分隔，最多 4 个</small></span>
+              <input id="profileTagInput" type="text" maxlength="36" />
+            </label>
+            <label class="field">
+              <span>个人简介</span>
+              <textarea id="profileNoteInput" rows="3" maxlength="140"></textarea>
+            </label>
+          </div>
+        </section>
+
+        <div class="settings-grid">
+          <label class="field">
+            <span>每日学习词数 <small>0 = 无上限</small></span>
+            <input
+              id="dailyGoalInput"
+              name="dailyGoal"
+              type="number"
+              min="0"
+              step="1"
+              inputmode="numeric"
+              value="0"
+            />
+            <small class="field-hint">填 0 表示不限量，可以一次学完整本词书。</small>
+          </label>
+
+          <label class="field">
+            <span>发音口音</span>
+            <select id="accentSelect" name="accent">
+              <option value="en-US">美音</option>
+              <option value="en-GB">英音</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>朗读速度 <output id="voiceRateOutput">0.88×</output></span>
+            <input
+              id="voiceRateInput"
+              name="voiceRate"
+              type="range"
+              min="0.65"
+              max="1.15"
+              step="0.05"
+              value="0.88"
+            />
+          </label>
+
+          <label class="field">
+            <span>背景音乐音量 <output id="musicVolumeOutput">35%</output></span>
+            <input
+              id="musicVolumeInput"
+              name="musicVolume"
+              type="range"
+              min="0"
+              max="100"
+              step="5"
+              value="35"
+            />
+            <small class="field-hint">只影响首页播放的背景音乐，不影响答题音效。</small>
+          </label>
+
+          <label class="field">
+            <span>界面主题</span>
+            <select id="themeSelect" name="theme">
+              <option value="light">纸张亮色</option>
+              <option value="dark">墨色暗色</option>
+            </select>
+          </label>
+
+          <label class="field checkbox-field">
+            <span>反馈音效</span>
+            <input id="soundEnabledInput" name="soundEnabled" type="checkbox" checked />
+            <small>答题、翻卡和完成时播放轻提示音</small>
+          </label>
+        </div>
+
+        <section class="settings-section ai-settings" aria-labelledby="aiSettingsTitle">
+          <h3 id="aiSettingsTitle">AI 词典 · 翻译 · 批改 · 典故</h3>
+          <p>
+            用自己的模型账号补全释义、例句、典故和写译批改。手机端通过系统网络桥直连
+            HTTPS 接口，不需要网页跨域；同一内容生成一次就写入本机缓存，换设备时可用缓存包带走。
+          </p>
+          <label class="field checkbox-field">
+            <span>启用 AI 助手</span>
+            <input id="aiEnabledInput" type="checkbox" checked />
+            <small>默认开启；没有保存 Key 时仍只走离线词库、本地规则和免费接口</small>
+          </label>
+          <div class="settings-grid">
+            <label class="field">
+              <span>供应商</span>
+              <select id="aiProviderSelect"></select>
+            </label>
+            <label class="field">
+              <span>模型</span>
+              <input id="aiModelInput" type="text" spellcheck="false" placeholder="例如 doubao-seed-1-6-250615" />
+            </label>
+            <label class="field">
+              <span>接口地址 <small>OpenAI 兼容 base_url</small></span>
+              <input id="aiBaseUrlInput" type="url" inputmode="url" spellcheck="false" placeholder="https://ark.cn-beijing.volces.com/api/v3" />
+            </label>
+            <label class="field">
+              <span>API Key</span>
+              <input id="aiKeyInput" type="password" autocomplete="off" spellcheck="false" placeholder="保存后不再回显" />
+              <small class="field-hint" id="aiKeyHint">Key 会写入系统 Keystore 加密区，不进入备份。</small>
+            </label>
+          </div>
+          <div class="settings-actions ai-key-actions">
+            <button type="button" class="button button-secondary" id="aiSaveKey">保存 Key</button>
+            <button type="button" class="button button-secondary" id="aiTest">测试连接</button>
+            <button type="button" class="text-button danger" id="aiClearKey">清除 Key</button>
+          </div>
+          <div class="ai-task-row" role="group" aria-label="AI 任务范围">
+            <span class="ai-task-label">启用范围</span>
+            <label class="ai-task"><input id="aiTaskDefine" type="checkbox" checked /> 单词释义</label>
+            <label class="ai-task"><input id="aiTaskTranslate" type="checkbox" checked /> 短句翻译</label>
+            <label class="ai-task"><input id="aiTaskAllusion" type="checkbox" checked /> 典故考据</label>
+            <label class="ai-task"><input id="aiTaskComic" type="checkbox" checked /> 漫画逐格翻译</label>
+            <label class="ai-task"><input id="aiTaskGrade" type="checkbox" checked /> 写译批改</label>
+          </div>
+          <p class="ai-cache-line" id="aiCacheHint">本机缓存 0 条。</p>
+          <div class="settings-actions">
+            <button type="button" class="button button-secondary" id="aiExportCache">
+              <svg><use href="#i-download"></use></svg>导出缓存包
+            </button>
+            <button type="button" class="button button-secondary" id="aiImportCache">
+              <svg><use href="#i-upload"></use></svg>导入缓存包
+            </button>
+            <button type="button" class="text-button danger" id="aiClearCache">清空缓存</button>
+          </div>
+          <input id="aiCacheFile" type="file" accept=".json,application/json" hidden />
+        </section>
+
+        <section class="settings-section" aria-labelledby="ocrSettingsTitle">
+          <h3 id="ocrSettingsTitle">漫画检测 · 识别服务</h3>
+          <p>
+            漫画的文本框检测和手写识别交给专用模型更稳。填入自建服务地址后，
+            识别本页会先把画面送到服务；服务不可用时自动回退到离线 OCR。
+            翻译仍由上面的 AI 助手完成。
+          </p>
+          <label class="field">
+            <span>服务地址 <small>POST /ocr</small></span>
+            <input id="ocrServiceInput" type="url" inputmode="url" spellcheck="false" placeholder="http://192.168.1.10:8787" />
+            <small class="field-hint">
+              留空只使用内置离线 OCR。服务需允许跨域，并返回
+              { regions: [{ text, box: [x0,y0,x1,y1], confidence, type }] }。
+            </small>
+          </label>
+          <div class="settings-actions">
+            <button type="button" class="button button-secondary" id="ocrServiceSave">保存地址</button>
+            <button type="button" class="button button-secondary" id="ocrServiceTest">测试连接</button>
+          </div>
+        </section>
+
+        <section class="settings-section" aria-labelledby="dataSettingsTitle">
+          <h3 id="dataSettingsTitle">学习数据</h3>
+          <p>换设备前导出备份；导入会恢复进度、错词和设置。</p>
+          <div class="settings-actions">
+            <button type="button" class="button button-secondary" id="exportProgress">
+              <svg><use href="#i-download"></use></svg>基础备份
+            </button>
+            <button type="button" class="button button-secondary" id="exportFullProgress">
+              <svg><use href="#i-download"></use></svg>完整备份
+            </button>
+            <button type="button" class="button button-secondary" id="importProgress">
+              <svg><use href="#i-upload"></use></svg>导入备份
+            </button>
+            <button type="button" class="text-button danger" id="resetProgress">
+              清空全部进度
+            </button>
+          </div>
+          <div class="settings-actions" style="margin-top:10px">
+            <button type="button" class="button button-secondary" id="openVoiceSettings">
+              <svg><use href="#i-volume"></use></svg>系统语音设置
+            </button>
+            <span style="color:var(--ink-faint);font-size:11px">英语或法语无声时，请安装对应语音包</span>
+          </div>
+          <input id="importFile" type="file" accept=".json,.zip,application/json,application/zip" hidden />
+        </section>
+
+        <section class="settings-section" aria-labelledby="aboutSettingsTitle">
+          <h3 id="aboutSettingsTitle">关于</h3>
+          <p>软件说明、作者的话，以及卸载前的数据提醒。</p>
+          <button class="backup-entry settings-dev-entry" type="button" data-action="open-developer">
+            <span class="dev-entry-avatar">
+              <img src="assets/developer-qimuliang.jpg" alt="" />
+            </span>
+            <span>
+              <strong>开发者的话</strong>
+              <small>祁木良 · 关于词刻、外文图书与本地数据</small>
+            </span>
+            <span class="entry-arrow">›</span>
+          </button>
+        </section>
+
+        <footer class="dialog-footer">
+          <p>词书来源与许可：见随附 NOTICE-MULTIBOOK.md</p>
+          <button class="button button-primary" value="save">保存设置</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="vendor/jszip.min.js"></script>
+    <script src="vendor/tesseract.min.js"></script>
+    <script src="assets/audio/sound-manager.js"></script>
+    <script src="assets/audio/bgm/bgm-manager.js"></script>
+    <script src="assets/audio/fr/word-audio.js"></script>
+    <script src="assets/audio/fr/french-audio.js"></script>
+    <script src="launch.js?v=20261120b"></script>
+    <script src="interactions.js?v=20261120d"></script>
+    <script src="core.js?v=20261120b"></script>
+    <script src="storage.js?v=20261121b"></script>
+    <script src="ai-service.js"></script>
+    <script src="words.js"></script>
+    <script src="book-cet6-attachment.js"></script>
+    <script src="book-en-10000.js"></script>
+    <script src="book-fr-a1-b2.js"></script>
+    <script src="book-en-medical.js"></script>
+    <script src="book-es-core.js"></script>
+    <script src="book-de-core.js"></script>
+    <script src="book-it-core.js"></script>
+    <script src="book-ja-core.js"></script>
+    <script src="book-yue-core.js"></script>
+    <script src="book-la-core.js"></script>
+    <script src="book-es-tiers.js"></script>
+    <script src="book-de-tiers.js"></script>
+    <script src="book-it-tiers.js"></script>
+    <script src="book-fr-tiers.js"></script>
+    <script src="book-yue-tiers.js"></script>
+    <script src="book-la-tiers.js"></script>
+    <script src="book-ja-tiers.js"></script>
+    <script src="listening-wordbook.js"></script>
+    <script src="writing-library.js"></script>
+    <script src="exam-library.js"></script>
+    <script src="listening-library.js"></script>
+    <script src="analysis/listening/manifest.js"></script>
+    <script src="analysis/writing/manifest.js"></script>
+    <script src="preloaded-user-library.js"></script>
+    <script src="preloaded-novels-library.js"></script>
+    <script src="public-library.js"></script>
+    <script src="classic-ip.js"></script>
+    <script src="typewords-catalog.js"></script>
+    <script src="typewords-dictionary.js"></script>
+    <script src="assets/audio/en/word-audio.js"></script>
+    <script src="assets/audio/es/word-audio.js"></script>
+    <script src="assets/audio/de/word-audio.js"></script>
+    <script src="assets/audio/it/word-audio.js"></script>
+    <script src="assets/audio/fr/word-audio-tiers.js"></script>
+    <script src="assets/audio/ja/word-audio.js"></script>
+    <script src="assets/audio/yue/word-audio.js"></script>
+    <script src="assets/audio/la/word-audio.js"></script>
+    <script src="assets/audio/en/sentences.js"></script>
+    <script src="word-audio-player.js?v=20261121a"></script>
+    <script src="app.js?v=20261121e"></script>
+  </body>
+</html>
